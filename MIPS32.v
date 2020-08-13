@@ -4,7 +4,7 @@
 module MIPS32 ( clk1, clk2 ) ; 
 
 //Using two phase clock, for avoiding clashes and clock skews 
-
+input clk1, clk2 ; 
 //Register Bank 
 reg [31:0] RegBank [31:0] ; //Register bank ( 32 X 32 ) 
 
@@ -98,11 +98,89 @@ always @ ( posedge clk2 )
 			SW: 						  ID_EX_type <= STORE  ;	 
 			BNEQZ, BEQZ: 				  ID_EX_type <= BRANCH ;
 			HLT: 						  ID_EX_type <= HALT   ;
-			default: 					  ID_EX_type <= HALT   ;	
+			default: 					  ID_EX_type <= HALT   ;	//In case of invalid opcode 
 		endcase 
 	end 
 
+//Execution Stage 
 
+always @ (posedge clk1) 
+	
+	if(HALTED == 0) 
+	begin 
+		EX_MEM_type <= ID_EX_type ; 
+		EX_MEM_IR <= ID_EX_IR ; 
+		TAKEN_BRANCH <= 0 ; 
+		
+		case ( ID_EX_type) //Decoding the type of instruction format 
+		
+		RR_ALU: begin 	//Register to Register type instructions 
+					case(ID_EX_IR[31:26]) // opcode for Register to Register ALU instructions 
+						ADD: EX_MEM_ALUOut <= ID_EX_A + ID_EX_B ; 
+						SUB: EX_MEM_ALUOut <= ID_EX_A - ID_EX_B ; 
+						AND: EX_MEM_ALUOut <= ID_EX_A & ID_EX_B ; 
+						OR : EX_MEM_ALUOut <= ID_EX_A | ID_EX_B ; 
+						SLT: EX_MEM_ALUOut <= ID_EX_A < ID_EX_B ; 
+						MUL: EX_MEM_ALUOut <= ID_EX_A * ID_EX_B ; 
+						default: EX_MEM_ALUOut <= 32'hxxxxxxxx ; 
+					endcase 
+				end 
+		RM_ALU: begin //Register to memory type instructions 
+					case( ID_EX_IR[31:26]) // opcode for Register to Memory ALU isntructions 
+						ADDI: EX_MEM_ALUOut <= ID_EX_A + ID_EX_Imm ; 
+						SUBI: EX_MEM_ALUOut <= ID_EX_A - ID_EX_Imm ; 
+						SLTI: EX_MEM_ALUOut <= ID_EX_A < ID_EX_Imm ; 
+						default: EX_MEM_ALUOut <= 32'hxxxxxxxx ; 
+					endcase 
+				end 
+		LOAD, STORE: begin //Load and store instructions 
+						EX_MEM_ALUOut <= ID_EX_A + ID_EX_Imm ; 
+						EX_MEM_B <= ID_EX_B ; 
+					end 
+		BRANCH: begin 
+					EX_MEM_ALUOut <= ID_EX_NPC + ID_EX_Imm ; 
+					EX_MEM_cond <= (ID_EX_A == 0 ) ; 
+				end 
+		endcase 
+	end 
+	
+
+//Memory stage 
+
+always @ (posedge clk2) 
+	if(HALTED == 0 ) 
+	begin 
+		MEM_WB_type <= EX_MEM_type ; 
+		MEM_WB_IR <= EX_MEM_IR ; 
+		
+		case (EX_MEM_type) 
+			RR_ALU, RM_ALU: MEM_WB_ALUOut <= EX_MEM_ALUOut ; 
+			
+			LOAD		  : MEM_WB_LMD <= Mem[EX_MEM_ALUOut] ; 
+			
+			STORE         : if(TAKEN_BRANCH == 0 ) //Disabling Writing Function  
+								Mem[EX_MEM_ALUOut] <= EX_MEM_B ; 
+			default		  : MEM_WB_ALUOut <= 32'hxxxxxxxx ; 
+		endcase 
+	end 
+	
+//Write back Stage 
+
+					
+always @ (posedge clk1) 
+	
+	begin 
+		if(TAKEN_BRANCH == 0) // Disable writing if branch is taken 
+		case(MEM_WB_type)
+		RR_ALU: RegBank[MEM_WB_IR[15:11]] <= MEM_WB_ALUOut ; // 'rd' 
+		
+		RM_ALU: RegBank[MEM_WB_IR[20:16]] <= MEM_WB_ALUOut ; // 'rt' 
+		
+		LOAD  : RegBank[MEM_WB_IR[20:16]] <= MEM_WB_LMD    ; // 'rt' in Load Instructions 
+		
+		HALT  : HALTED <= 1'b1 ; 
+		endcase 
+	end 
 
 
 endmodule 
