@@ -55,10 +55,23 @@ Addressing Modes:
 5. Pseudo-direct addressing 
 	J Label (16 bit offset is added to PC to get the target address) 
 
+MIPS32 Instruction Cycle 
+We divide the instruction execution cycle into five steps: 
+1. IF -> Instruction Fetch 
+2. ID -> Instruction Decode/ Register Fetch 
+3. EX -> Execution/ Effective Address Calculation 
+4. MEM-> Memory Access/ Branch Completion 
+5. WE -> Register Write-back 
+
+
+
+
 Some instructions require two register operands 'rs' and 'rt' as input, 
 while some require only 'rs'. This is only known after the instruction is decoded. 
 While decoding is going on, we can prefetch the registers in parallel (May or may not be required later). 
 In short, assume by default that the instruction is "R-type" 
+
+
 
 
 

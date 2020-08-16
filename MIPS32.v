@@ -71,7 +71,7 @@ always @ ( posedge clk1 )
 			end 
 		end 
 
-//Instruction Decode Stage 
+//Instruction Decode Stage or Register Fetch stage
 
 always @ ( posedge clk2 ) 
 
@@ -102,7 +102,7 @@ always @ ( posedge clk2 )
 		endcase 
 	end 
 
-//Execution Stage 
+//Execution Stage or Effective Address Calculation
 
 always @ (posedge clk1) 
 	
@@ -145,7 +145,7 @@ always @ (posedge clk1)
 	end 
 	
 
-//Memory stage 
+//Memory access stage or Branch Completion  
 
 always @ (posedge clk2) 
 	if(HALTED == 0 ) 
