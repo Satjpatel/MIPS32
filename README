@@ -1,5 +1,7 @@
-Basic implementation of MIPS32, taking s subset of the larger instruction set (though having the functionality to extend). 
+Basic implementation of MIPS32 (word addressable), taking a subset of the larger instruction set (though having the functionality to extend). 
 This implementation has 32 registers, each of 32 bits (R0 being directly connected to ground) 
+
+It also has a special purpose 32 bit register-> Program Counter (PC). It points to the next instruction in memory to be fetched and executed. 
 
 
 Instructions being considered: 
@@ -32,12 +34,31 @@ SLTI R1, R2, #offset // if(R2 < #offset) -> R1 = 1 , else R1 = 0
 BEQZ R1, Label //Branch to Label if R1 = 0 
 BNEQZ R1, Label //Branch to Label if R1 = 1 
 
-4. Jump Instruction 
-
-J Loop //Branch to Loop unconditionally 
-
-5. Miscellaneous Instruction 
+4. Miscellaneous Instruction 
 
 HLT 
+
+5. Jump Instruction (Present in MIPS 32, not implemented here) 
+J Label (Unconditional jump to label) 
+
+
+Addressing Modes: 
+(Memory is word (32 bits) addressable
+1. Register addressing 
+	ADD R1, R2, R3  //R1 = R2 + R3
+2. Immediate addressing 
+	ADDI R1, R2, 200 //R1 = R2 + 200
+3. Base addressing 
+	LW R5, #offset(R1) // R5 = Mem[R1+#offset] 
+4. PC Relative addressing 
+	BEQZ R3, Label (16 bit offset is added to PC to get the target address) 
+5. Pseudo-direct addressing 
+	J Label (16 bit offset is added to PC to get the target address) 
+
+Some instructions require two register operands 'rs' and 'rt' as input, 
+while some require only 'rs'. This is only known after the instruction is decoded. 
+While decoding is going on, we can prefetch the registers in parallel (May or may not be required later). 
+In short, assume by default that the instruction is "R-type" 
+
 
 
