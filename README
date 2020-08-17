@@ -57,10 +57,42 @@ Addressing Modes:
 
 MIPS32 Instruction Cycle 
 We divide the instruction execution cycle into five steps: 
+
 1. IF -> Instruction Fetch 
+
+Here the instruction pointed to by the PC is fetched from memory, and also the next value of PC is computed. 
+For a branch instruction, new value of the PC may be the target address.So PC is not updated in this stage; new value is stored in a register NPC. 
+
+Gist:   IR <- Mem[PC]  (IR - Instruction Register)
+	NPC <- PC + 1 
+
 2. ID -> Instruction Decode/ Register Fetch 
+
+The instruction already fetched in IR is decoded. 
+- 'opcode' is 6 bits ( 31:26) 
+- 'rs' (first source register - 25:21) and         'rt' (second source register - 20:16) 
+- 16 bit immediate data (15:0) 
+- 26 bit immedaite data (25:0) 
+
+Decoding is done in parallel with reading the register operands 'rs' and 'rt'. This is possible because these fields are in a fixed location in the instruction format. In a similar way, the immediate data are sign-extended. 
+
+Gist: A <- Reg[rs] 
+	B <- Reg[rt] 
+	Imm <- { 16{IR[15]}, IR[15:0] } 
+	
+A, B, Imm are temporary registers 
+
+
+
 3. EX -> Execution/ Effective Address Calculation 
+
+Here, the ALU is used to perform some calculation. The operation to be operated is already been decoded, and the ALU operates on the operands previously made ready ( A, B and Imm). 
+
+Gist: ALUOut <- A func B // for register-register ALU operations
+	ALUOut <- A + Imm // for load type LW R3, 100(R8) 
 4. MEM-> Memory Access/ Branch Completion 
+
+
 5. WE -> Register Write-back 
 
 
