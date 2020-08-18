@@ -77,8 +77,8 @@ The instruction already fetched in IR is decoded.
 Decoding is done in parallel with reading the register operands 'rs' and 'rt'. This is possible because these fields are in a fixed location in the instruction format. In a similar way, the immediate data are sign-extended. 
 
 Gist: A <- Reg[rs] 
-	B <- Reg[rt] 
-	Imm <- { 16{IR[15]}, IR[15:0] } 
+      B <- Reg[rt] 
+      Imm <- { 16{IR[15]}, IR[15:0] } 
 	
 A, B, Imm are temporary registers 
 
@@ -118,7 +118,19 @@ Gist:  PC <- NPC                //Load instruction
 	PC <- NPC  //for all other instructions 
 
 5. WE -> Register Write-back 
-Added description. 
+
+In this step, the result is written back into the register file. 
+--Result may come from ALU. 
+--Result may come from the memory system (via a LOAD instruction) 
+The position of the destination register in the instruction word depends on the instruction type (although it is already known after decoding)  
+R -type -> 'rd' [15:11] 
+I -type -> 'rt' [20:16] 
+
+Gist:   Reg[rd] <- ALUOut      //Register-Register ALU instruction 
+	
+	Reg[rt] <- ALUOut      //Register-Immediate ALU instruction 
+	
+	Reg[rt] <- LMD 	       //Load instruction 
 
 
 
