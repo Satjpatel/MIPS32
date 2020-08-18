@@ -88,12 +88,34 @@ A, B, Imm are temporary registers
 
 Here, the ALU is used to perform some calculation. The operation to be operated is already been decoded, and the ALU operates on the operands previously made ready ( A, B and Imm). 
 
-Gist: ALUOut <- A func B // for register-register ALU operations
-	ALUOut <- A + Imm // for load type LW R3, 100(R8) 
+Gist:   ALUOut <- A func B      // for register-register ALU operations
 
+	ALUOut <- A func Imm    //for register-immediate type ALU operations 
+
+	ALUOut <- A + Imm       // for load type LW R3, 100(R8) 
+
+	ALUOut <- NPC + Imm     // for branching instruction. We add the offset regardless the result 
+	   cond <- (A==0)       //If this is satisfied, then it the PC would shift to the branched location
+
+ 
 4. MEM-> Memory Access/ Branch Completion 
-Here, the ALU provides Memory Access to the data of the resultant register in the memory bank. 
-Alternatively, if it is a branch instruction, the new address is loaded inside the PC (Program Counter), and the subsequent branching begins.
+
+This step is used by load, store and branch instructions. 
+The load and store instructions access the memory. 
+The branch instruction updates PC depending upon the outcome of the branch condition. 
+	
+Gist:  PC <- NPC                //Load instruction 
+       LMD <- Mem[ALUOut]       //LMD - Load Memory Data (temporary register) 
+	
+       PC <- NPC 			
+       Mem[ALUOut] <- B 	//B, which is the target, is a temporary register which contains data to be stored
+ 
+       if(cond) 		//Branch condition
+		PC <- ALUOut 
+	else
+		PC <- NPC 
+
+	PC <- NPC  //for all other instructions 
 
 5. WE -> Register Write-back 
 Added description. 
