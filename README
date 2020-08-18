@@ -96,6 +96,7 @@ Here, the ALU provides Memory Access to the data of the resultant register in th
 Alternatively, if it is a branch instruction, the new address is loaded inside the PC (Program Counter), and the subsequent branching begins.
 
 5. WE -> Register Write-back 
+Added description. 
 
 
 
