@@ -90,8 +90,10 @@ Here, the ALU is used to perform some calculation. The operation to be operated 
 
 Gist: ALUOut <- A func B // for register-register ALU operations
 	ALUOut <- A + Imm // for load type LW R3, 100(R8) 
-4. MEM-> Memory Access/ Branch Completion 
 
+4. MEM-> Memory Access/ Branch Completion 
+Here, the ALU provides Memory Access to the data of the resultant register in the memory bank. 
+Alternatively, if it is a branch instruction, the new address is loaded inside the PC (Program Counter), and the subsequent branching begins.
 
 5. WE -> Register Write-back 
 
