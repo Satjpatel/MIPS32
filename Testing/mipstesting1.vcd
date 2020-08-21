@@ -1,0 +1,61 @@
+$date
+	Fri Aug 21 11:43:00 2020
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module Test1 $end
+$scope module mips_testing1 $end
+$var wire 1 ! clk1 $end
+$var wire 1 " clk2 $end
+$var reg 32 # EX_MEM_ALUOut [31:0] $end
+$var reg 32 $ EX_MEM_B [31:0] $end
+$var reg 32 % EX_MEM_IR [31:0] $end
+$var reg 1 & EX_MEM_cond $end
+$var reg 3 ' EX_MEM_type [2:0] $end
+$var reg 1 ( HALTED $end
+$var reg 32 ) ID_EX_A [31:0] $end
+$var reg 32 * ID_EX_B [31:0] $end
+$var reg 32 + ID_EX_IR [31:0] $end
+$var reg 32 , ID_EX_Imm [31:0] $end
+$var reg 32 - ID_EX_NPC [31:0] $end
+$var reg 3 . ID_EX_type [2:0] $end
+$var reg 32 / IF_ID_IR [31:0] $end
+$var reg 32 0 IF_ID_NPC [31:0] $end
+$var reg 32 1 MEM_WB_ALUOut [31:0] $end
+$var reg 32 2 MEM_WB_IR [31:0] $end
+$var reg 32 3 MEM_WB_LMD [31:0] $end
+$var reg 3 4 MEM_WB_type [2:0] $end
+$var reg 32 5 PC [31:0] $end
+$var reg 1 6 TAKEN_BRANCH $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#400
+$dumpvars
+06
+b10100 5
+bx 4
+bx 3
+bx 2
+bx 1
+b10100 0
+bx /
+b1 .
+b1 -
+b1010 ,
+b101000000000010000000000001010 +
+b1 *
+b0 )
+0(
+b1 '
+x&
+b101000000000010000000000001010 %
+bx $
+b1010 #
+1"
+0!
+$end

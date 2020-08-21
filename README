@@ -110,7 +110,7 @@ Gist:  PC <- NPC                //Load instruction
        PC <- NPC 			
        Mem[ALUOut] <- B 	//B, which is the target, is a temporary register which contains data to be stored
  
-       if(cond) 		//Branch condition
+       if(cond) 		//Branch condition  
 		PC <- ALUOut 
 	else
 		PC <- NPC 
