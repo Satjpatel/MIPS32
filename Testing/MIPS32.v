@@ -1,10 +1,10 @@
 //MIPS32 Basic Implmentation 
 //Engineer : Sat Patel 
 
-module MIPS32 ( clk1 ) ; 
+module MIPS32 ( clk1, clk2 ) ; 
 
 //Using two phase clock, for avoiding clashes and clock skews 
-input clk1 ; 
+input clk1, clk2 ; 
 //Register Bank 
 reg [31:0] RegBank [31:0] ; //Register bank ( 32 X 32 ) 
 
@@ -73,7 +73,7 @@ always @ ( posedge clk1 )
 
 //Instruction Decode Stage or Register Fetch stage --- Stage 2
 
-always @ ( posedge clk1 ) 
+always @ ( posedge clk2 ) 
 
 	if(HALTED == 0 ) 
 		begin 
@@ -151,7 +151,7 @@ always @ (posedge clk1)
 
 //Memory access stage or Branch Completion  --- Stage 4 
 
-always @ (posedge clk1) 
+always @ (posedge clk2) 
 
 	if(HALTED == 0 ) 
 	

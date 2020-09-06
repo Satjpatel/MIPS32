@@ -9,23 +9,23 @@
 
 module Test1 ; 
 
-reg clk1 ; 
+reg clk1, clk2 ; 
 
 integer k ; 
 
-MIPS32 mips_testing1 ( clk1 ) ; 
+MIPS32 mips_testing1 ( clk1, clk2 ) ; 
 
 //Generating 2 phase clocks 
 initial 
 	begin 
-		clk1 = 1 ; 
+		clk1 = 0 ; 
 		
 		repeat(80) //The program would be over by this
 			begin 
 				#5 clk1 = 0 ; 
 				#5 clk1 = 1 ; 
-				//#5 clk2 = 1 ; 
-				//#5 clk1 = 0 ; 
+				#5 clk2 = 1 ; 
+				#5 clk2 = 0 ; 
 			end 
 	end 
 	
