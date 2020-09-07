@@ -109,11 +109,8 @@ A, B, Imm are temporary registers
 Here, the ALU is used to perform some calculation. The operation to be operated is already been decoded, and the ALU operates on the operands previously made ready ( A, B and Imm). 
 
 	Gist:   ALUOut <- A func B      // for register-register ALU operations
-
 		  ALUOut <- A func Imm    //for register-immediate type ALU operations 
-
 	          ALUOut <- A + Imm       // for load type LW R3, 100(R8) 
-
 	          ALUOut <- NPC + Imm     // for branching instruction. We add the offset regardless the result 
 	          cond <- (A==0)       //If this is satisfied, then it the PC would shift to the branched location
 
@@ -126,13 +123,12 @@ The branch instruction updates PC depending upon the outcome of the branch condi
 	
 	Gist:  PC <- NPC                //Load instruction 
       		 LMD <- Mem[ALUOut]       //LMD - Load Memory Data (temporary register) 
-	
-       		PC <- NPC 			
-    	        Mem[ALUOut] <- B 	//B, which is the target, is a temporary register which contains data to be stored
+       		 PC <- NPC 			
+    	         Mem[ALUOut] <- B 	//B, which is the target, is a temporary register which contains data to be stored
  
-    		   if(cond) 		//Branch condition  
+ 		 if(cond) 		//Branch condition  
 			PC <- ALUOut 
-		  else
+		 else
 			PC <- NPC 
 
 		PC <- NPC  //for all other instructions 
@@ -146,10 +142,8 @@ The position of the destination register in the instruction word depends on the 
 R -type -> 'rd' [15:11] 
 I -type -> 'rt' [20:16] 
 
-	Gist:   Reg[rd] <- ALUOut      //Register-Register ALU instruction 
-	
+	Gist:    Reg[rd] <- ALUOut      //Register-Register ALU instruction 
 		   Reg[rt] <- ALUOut      //Register-Immediate ALU instruction 
-	
 		   Reg[rt] <- LMD 	       //Load instruction 
 
 
