@@ -19,7 +19,7 @@ It also has a special purpose 32 bit register-> Program Counter (PC). It points 
 
 #### 2. Arithmetic and Logic Instructions 
 
-	##### 2.1 Only register instructions
+##### 		2.1 Only register instructions
 
 
 		ADD R1, R2, R3 // R1 = R2 + R3 
@@ -31,7 +31,7 @@ It also has a special purpose 32 bit register-> Program Counter (PC). It points 
 
 
 
-	##### 2.2 Immediate instructions 
+##### 		2.2 Immediate instructions 
 	
 
 		ADDI R1, R2, #offset // R1 = R2 + #offset 
@@ -96,9 +96,9 @@ The instruction already fetched in IR is decoded.
 
 Decoding is done in parallel with reading the register operands 'rs' and 'rt'. This is possible because these fields are in a fixed location in the instruction format. In a similar way, the immediate data are sign-extended. 
 
-Gist: A <- Reg[rs] 
-      B <- Reg[rt] 
-      Imm <- { 16{IR[15]}, IR[15:0] } 
+	Gist:  A <- Reg[rs] 
+   	 	 B <- Reg[rt] 
+    	 	 Imm <- { 16{IR[15]}, IR[15:0] } 
 	
 A, B, Imm are temporary registers 
 
@@ -108,14 +108,14 @@ A, B, Imm are temporary registers
 
 Here, the ALU is used to perform some calculation. The operation to be operated is already been decoded, and the ALU operates on the operands previously made ready ( A, B and Imm). 
 
-Gist:   ALUOut <- A func B      // for register-register ALU operations
+	Gist:   ALUOut <- A func B      // for register-register ALU operations
 
-	ALUOut <- A func Imm    //for register-immediate type ALU operations 
+		  ALUOut <- A func Imm    //for register-immediate type ALU operations 
 
-	ALUOut <- A + Imm       // for load type LW R3, 100(R8) 
+	          ALUOut <- A + Imm       // for load type LW R3, 100(R8) 
 
-	ALUOut <- NPC + Imm     // for branching instruction. We add the offset regardless the result 
-	   cond <- (A==0)       //If this is satisfied, then it the PC would shift to the branched location
+	          ALUOut <- NPC + Imm     // for branching instruction. We add the offset regardless the result 
+	          cond <- (A==0)       //If this is satisfied, then it the PC would shift to the branched location
 
  
 ### 4. MEM-> Memory Access/ Branch Completion 
@@ -124,18 +124,18 @@ This step is used by load, store and branch instructions.
 The load and store instructions access the memory. 
 The branch instruction updates PC depending upon the outcome of the branch condition. 
 	
-Gist:  PC <- NPC                //Load instruction 
-       LMD <- Mem[ALUOut]       //LMD - Load Memory Data (temporary register) 
+	Gist:  PC <- NPC                //Load instruction 
+      		 LMD <- Mem[ALUOut]       //LMD - Load Memory Data (temporary register) 
 	
-       PC <- NPC 			
-       Mem[ALUOut] <- B 	//B, which is the target, is a temporary register which contains data to be stored
+       		PC <- NPC 			
+    	        Mem[ALUOut] <- B 	//B, which is the target, is a temporary register which contains data to be stored
  
-       if(cond) 		//Branch condition  
-		PC <- ALUOut 
-	else
-		PC <- NPC 
+    		   if(cond) 		//Branch condition  
+			PC <- ALUOut 
+		  else
+			PC <- NPC 
 
-	PC <- NPC  //for all other instructions 
+		PC <- NPC  //for all other instructions 
 
 ### 5. WE -> Register Write-back 
 
@@ -146,11 +146,11 @@ The position of the destination register in the instruction word depends on the 
 R -type -> 'rd' [15:11] 
 I -type -> 'rt' [20:16] 
 
-Gist:   Reg[rd] <- ALUOut      //Register-Register ALU instruction 
+	Gist:   Reg[rd] <- ALUOut      //Register-Register ALU instruction 
 	
-	Reg[rt] <- ALUOut      //Register-Immediate ALU instruction 
+		   Reg[rt] <- ALUOut      //Register-Immediate ALU instruction 
 	
-	Reg[rt] <- LMD 	       //Load instruction 
+		   Reg[rt] <- LMD 	       //Load instruction 
 
 
 
