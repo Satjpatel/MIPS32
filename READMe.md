@@ -11,43 +11,55 @@ It also has a special purpose 32 bit register-> Program Counter (PC). It points 
 #### 1. Load and Store Instructions 
 
 '''
+
 	LW Rd, #offset(Rs)  // Rd = mem[#offset+Rs] 
 	Sw Rd, -#offset(Rs) // mem[Rs-#offset] = Rd 
+	
 ''' 
 
 #### 2. Arithmetic and Logic Instructions 
 
 ##### 2.1 Only register instructions
 '''
+
 	ADD R1, R2, R3 // R1 = R2 + R3 
 	SUB R1, R2, R3 //R1 = R2 - R3 
 	AND R20, R1, R5 //R20 = R1 & R5 
 	OR R11, R3, R2 //R11 = R2 | R3 
 	MUL R1, R2, R3 //R1 = R2*R3 
 	SLT R1, R2, R3 //Set if less than -> if(R2<R3) -> R1 = 1 , else R1 = 0 
+	
 '''
 
 ##### 2.2 Immediate instructions 
 '''
+
 	ADDI R1, R2, #offset // R1 = R2 + #offset 
 	SUBI R1, R2, #offset // R1 = R2 - #offset 
 	SLTI R1, R2, #offset // if(R2 < #offset) -> R1 = 1 , else R1 = 0 
+	
 '''
 
 #### 3. Branch Instructions 
 '''
+
 	BEQZ R1, Label //Branch to Label if R1 = 0 
 	BNEQZ R1, Label //Branch to Label if R1 = 1 
+	
 '''
 
 #### 4. Miscellaneous Instruction 
 '''
+
 	HLT 
+	
 '''
 
 #### 5. Jump Instruction (Present in MIPS 32, not implemented here) 
 '''
+
 	J Label (Unconditional jump to label) 
+	
 '''
 
 ## Addressing Modes: 
