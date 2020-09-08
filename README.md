@@ -83,8 +83,8 @@ We divide the instruction execution cycle into five steps:
 Here the instruction pointed to by the PC is fetched from memory, and also the next value of PC is computed. 
 For a branch instruction, new value of the PC may be the target address.So PC is not updated in this stage; new value is stored in a register NPC. 
 
-Gist:   IR <- Mem[PC]  (IR - Instruction Register)
-	NPC <- PC + 1 
+	Gist:   IR <- Mem[PC]  (IR - Instruction Register)
+		NPC <- PC + 1 
 
 ### 2. ID -> Instruction Decode/ Register Fetch 
 
