@@ -49,7 +49,7 @@ initial
 		mips_testing1.Mem[2] = 32'h28030019 ; 
 		
 		//Now we have to add 2 dummy instructions 
-		//to wait for R2 to be stored
+		//to wait for R2 to be updated too.
 		
 		//Dummy instruction -- OR R7, R7, R7 
 		mips_testing1.Mem[3] = 32'h0ce77800 ; 
