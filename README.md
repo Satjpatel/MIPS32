@@ -1,5 +1,7 @@
 # MIPS32 Implementation
 
+![alt tag](https://user-images.githubusercontent.com/44218342/103212220-43d19a80-4930-11eb-9816-7561620ce8a2.png)
+
 ### Basic implementation of MIPS32 (word addressable), taking a subset of the larger instruction set (though having the functionality to extend). 
 This implementation has 32 registers, each of 32 bits (R0 being directly connected to ground) 
 
