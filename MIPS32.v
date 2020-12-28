@@ -8,6 +8,7 @@
 //EX - Execution/Effective Address Calculation 
 //MEM - Memory Access
 //WB - Write back 
+//IR - Instruction Register 
 //---------------------------------------------//
 
 
@@ -17,9 +18,9 @@ module MIPS32 ( clk1, clk2 ) ;
 input clk1, clk2 ;
 
 //Register Bank
-reg [31:0] RegBank [31:0] ; //Register bank ( 32 X 32 )
+reg [31:0] RegBank [31:0] ; //Register bank ( 32 X 32 ) - 32 Registers, each of 32 Bits
 
-//Memory Unit - 1024 x 32
+//Memory Unit - 1024 x 32 - 4 Kilobytes Memory 
 reg [31:0] Mem [1023:0] ;
 
 //Declaring the opcodes for the various instructions
@@ -40,6 +41,8 @@ parameter RR_ALU = 3'b000, RM_ALU = 3'b001, LOAD = 3'b010,
 //BRANCH - Branch Instruction 
 //HALT - Halt Instruction 
 
+
+
 reg [2:0] ID_EX_type, EX_MEM_type, MEM_WB_type ;
 
 
@@ -59,7 +62,7 @@ reg TAKEN_BRANCH ;
 reg [31:0] PC, IF_ID_IR, IF_ID_NPC ;
 //PC- Program Counter
 //IR - Instruction Register
-//NPC - Next Program Counter
+//NPC - Next Program Counter - We use this to temporarily store the next instruction, just in case when there is a Branch/Jump Instruction in the middle. 
 
 
 //Defining intermediate latches between Instruction Decode stage and
@@ -76,6 +79,7 @@ reg EX_MEM_cond ;
 reg [31:0] MEM_WB_IR, MEM_WB_ALUOut, MEM_WB_LMD ;
 
 ///////////---------------------------------------------------//////////////////
+
 
 //-------------------- Stage 1 -----------------------------------//
 //Instruction Fetch Stage --- Stage 1
@@ -127,7 +131,7 @@ always @ ( posedge clk2 )
 			ID_EX_IR <= IF_ID_IR ;
 			ID_EX_Imm <= { {16{IF_ID_IR[15]} } , {IF_ID_IR[15:0] }} ;
 
-		case (IF_ID_IR[31:26])
+		case (IF_ID_IR[31:26]) //Decoding the opcode 
 
 			ADD, SUB, AND, OR, SLT, MUL:  ID_EX_type <= RR_ALU ;
 			ADDI, SUBI, SLTI: 			  ID_EX_type <= RM_ALU ;
@@ -149,7 +153,7 @@ always @ ( posedge clk2 )
 
 always @ (posedge clk1)
 
-	if(HALTED == 0)
+	if(HALTED == 0) //That is, if instructions are still left in pipeline to execute
 	begin
 
 		EX_MEM_type <= ID_EX_type ;
@@ -169,6 +173,7 @@ always @ (posedge clk1)
 						default: EX_MEM_ALUOut <= 32'hxxxxxxxx ;
 					endcase
 				end
+
 		RM_ALU: begin //Register to memory type instructions
 					case( ID_EX_IR[31:26]) // opcode for Register to Memory ALU isntructions
 						ADDI: EX_MEM_ALUOut <= ID_EX_A + ID_EX_Imm ;
@@ -177,10 +182,12 @@ always @ (posedge clk1)
 						default: EX_MEM_ALUOut <= 32'hxxxxxxxx ;
 					endcase
 				end
+
 		LOAD, STORE: begin //Load and store instructions
 						EX_MEM_ALUOut <= ID_EX_A + ID_EX_Imm ;
 						EX_MEM_B <= ID_EX_B ;
 					end
+
 		BRANCH: begin
 					EX_MEM_ALUOut <= ID_EX_NPC + ID_EX_Imm ;
 					EX_MEM_cond <= (ID_EX_A == 0 ) ;
@@ -189,7 +196,9 @@ always @ (posedge clk1)
 
 	end
 
+//-------------------End of Stage 3 ---------------------------------------//
 
+//--------------------- Stage 4 --------------------------------------------//
 //Memory access stage or Branch Completion  --- Stage 4
 
 always @ (posedge clk2)
@@ -215,8 +224,11 @@ always @ (posedge clk2)
 
 	end
 
-//Write back Stage --- Stage 5
+//----------------------------End of Stage 4 ---------------------------------//
 
+
+//Write back Stage --- Stage 5
+//----------------------------------Stage 5 -----------------------------------//
 
 always @ (posedge clk1)
 
@@ -240,3 +252,5 @@ always @ (posedge clk1)
 
 
 endmodule
+
+//--------------------End of Stage 5 -------------------------------------------//

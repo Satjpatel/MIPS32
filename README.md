@@ -84,11 +84,11 @@ Here the instruction pointed to by the PC is fetched from memory, and also the n
 For a branch instruction, new value of the PC may be the target address.So PC is not updated in this stage; new value is stored in a register NPC. 
 
 	Gist:   IR <- Mem[PC]  (IR - Instruction Register)
-		NPC <- PC + 1 
+			NPC <- PC + 1 
 
 ### 2. ID -> Instruction Decode/ Register Fetch 
 
-The instruction already fetched in IR is decoded. 
+The instruction fetched in IR is decoded. 
 - 'opcode' is 6 bits ( 31:26) 
 - 'rs' (first source register - 25:21) and         'rt' (second source register - 20:16) 
 - 16 bit immediate data (15:0) 
@@ -96,9 +96,9 @@ The instruction already fetched in IR is decoded.
 
 Decoding is done in parallel with reading the register operands 'rs' and 'rt'. This is possible because these fields are in a fixed location in the instruction format. In a similar way, the immediate data are sign-extended. 
 
-	Gist:  A <- Reg[rs] 
-   	 	 B <- Reg[rt] 
-    	 	 Imm <- { 16{IR[15]}, IR[15:0] } 
+	Gist:  	A <- Reg[rs] 
+   	 		B <- Reg[rt] 
+    		Imm <- { 16{IR[15]}, IR[15:0] } //"Done in anticipation"
 	
 A, B, Imm are temporary registers 
 
@@ -109,10 +109,10 @@ A, B, Imm are temporary registers
 Here, the ALU is used to perform some calculation. The operation to be operated is already been decoded, and the ALU operates on the operands previously made ready ( A, B and Imm). 
 
 	Gist:   ALUOut <- A func B      // for register-register ALU operations
-		  ALUOut <- A func Imm    //for register-immediate type ALU operations 
-	          ALUOut <- A + Imm       // for load type LW R3, 100(R8) 
-	          ALUOut <- NPC + Imm     // for branching instruction. We add the offset regardless the result 
-	          cond <- (A==0)       //If this is satisfied, then it the PC would shift to the branched location
+		  	ALUOut <- A func Imm    //for register-immediate type ALU operations 
+	        ALUOut <- A + Imm       // for load type LW R3, 100(R8) 
+	    	ALUOut <- NPC + Imm     //for branching inst. We add the offset regardless the result 
+	        cond <- (A==0)   //If this is satisfied, then the PC would shift to the branched location
 
  
 ### 4. MEM-> Memory Access/ Branch Completion 
