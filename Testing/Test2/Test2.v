@@ -26,8 +26,13 @@ initial
 		for(k = 0 ; k < 31 ; k=k+1 ) 
 			mips_testing2.RegBank[k] = k ; 
 		
-		//ADDI R1, R0, 120 
+		//ADDI R1, R0, 120  
 		mips_testing2.Mem[0] = 32'h28010078 ; 
+		
+		//Flow dependency - We are tackling this on the software level.   
+		//(Detech and eliminate the dependency on the software level) -- No requirement of doing anything on the hardware level 
+		
+		
 		
 		//Dummy Instruction 
 		//OR R3, R3, R3 
